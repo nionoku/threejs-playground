@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "lint": "eslint --fix .",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "BASE_PATH=/threejs-playground/ build-storybook"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
