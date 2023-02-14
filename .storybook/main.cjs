@@ -1,4 +1,4 @@
-const { mergeConfig } = require("vite");
+import { mergeConfig } from 'vite';
 
 module.exports = {
   'stories': [
@@ -17,7 +17,7 @@ module.exports = {
   },
   async viteFinal(config, { configType }) {
     return mergeConfig(config, {
-      base: process.env.BASE_PATH || config.base
-    })
-  }
+      base: process.env.BASE_PATH || config.base,
+    });
+  },
 };
