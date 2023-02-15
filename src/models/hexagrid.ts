@@ -1,4 +1,4 @@
-import { Hexagonal, HexagonalWireframe } from './hexagonal';
+import { Hexagonal, HexagonalFlat } from './hexagonal';
 import { Box3, Group, Object3D } from 'three';
 
 /** By default created pointy orientation */
@@ -29,8 +29,26 @@ export class Hexagrid extends Group {
 }
 
 /** By default created pointy orientation */
-export class HexagridWireframe extends Hexagrid {
-  constructor(columns: number, rows: number, height = 1) {
-    super(columns, rows, height, new HexagonalWireframe());
+export class HexagridFlat extends Group {
+  constructor(columns: number, rows: number, tile: Object3D = new HexagonalFlat()) {
+    super();
+
+    const bbox = new Box3().setFromObject(tile);
+
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < columns; i++) {
+        const item = tile.clone();
+        item.position.x = bbox.max.x * 2 * (3 / 4) * i;
+        item.position.y = bbox.max.y * 2 * j + bbox.max.y * (i & 1);
+
+        this.add(item);
+      }
+    }
+
+    // centring
+    new Box3()
+      .setFromObject(this)
+      .getCenter(this.position)
+      .multiplyScalar(-1);
   }
 }
