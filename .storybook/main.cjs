@@ -1,4 +1,5 @@
-import { mergeConfig } from 'vite';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { mergeConfig } = require('vite');
 
 module.exports = {
   'stories': [
