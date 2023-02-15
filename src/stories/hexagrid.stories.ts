@@ -1,5 +1,6 @@
 import { Meta, Story } from '@storybook/html';
-import { HexagridWireframe, Hexagrid } from '../models/hexagrid';
+import { Hexagonal, HexagonalWireframe } from '../models/hexagonal';
+import { Hexagrid } from '../models/hexagrid';
 import { useScene } from './utils/scene';
 
 type Args = {
@@ -27,9 +28,10 @@ const Template: Story<Args> = (args) => {
   camera.position.x = 0;
   camera.position.y = 20;
 
-  const grid = args.wireframe 
-    ? new HexagridWireframe(args.columns, args.rows)
-    : new Hexagrid(args.columns, args.rows);
+  const hexagonal = args.wireframe 
+    ? new HexagonalWireframe() 
+    : new Hexagonal();
+  const grid = new Hexagrid(args.columns, args.rows, 0.4, hexagonal);
 
   scene.add(grid);
 

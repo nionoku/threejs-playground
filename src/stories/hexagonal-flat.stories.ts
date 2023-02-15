@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/html';
 import { useScene } from './utils/scene';
-import { Hexagonal, HexagonalFlat, HexagonalFlatWireframe, HexagonalWireframe } from '../models/hexagonal';
+import { HexagonalFlat, HexagonalFlatWireframe } from '../models/hexagonal';
 
 type Args = {
   wireframe: boolean,
@@ -19,9 +19,9 @@ const meta: Meta<Args> = {
 const Template: Story<Args> = (args) => {
   const { scene, camera, canvas } = useScene(document.querySelector('#root') as HTMLElement);
 
-  camera.position.z = 0;
+  camera.position.z = 10;
   camera.position.x = 0;
-  camera.position.y = 10;
+  camera.position.y = 0;
 
   const hexagonal = args.wireframe 
     ? new HexagonalFlatWireframe()
