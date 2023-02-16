@@ -1,5 +1,5 @@
 import { Hexagonal, HexagonalFlat } from './hexagonal';
-import { Box3, Group, Object3D } from 'three';
+import { Box3, Event, Group, Mesh, Object3D } from 'three';
 
 /** By default created pointy orientation */
 export class Hexagrid extends Group {
@@ -30,6 +30,8 @@ export class Hexagrid extends Group {
 
 /** By default created pointy orientation */
 export class HexagridFlat extends Group {
+  declare children: Mesh[];
+  
   constructor(columns: number, rows: number, tile: Object3D = new HexagonalFlat()) {
     super();
 
