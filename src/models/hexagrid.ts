@@ -35,13 +35,23 @@ export class HexagridFlat extends Group {
   constructor(columns: number, rows: number, tile: Object3D = new HexagonalFlat()) {
     super();
 
-    const bbox = new Box3().setFromObject(tile);
+    const modifiedTile = tile.clone();
+    modifiedTile.rotation.z = Math.PI / 2;
+    const bbox = new Box3().setFromObject(modifiedTile);
 
     for (let j = 0; j < rows; j++) {
       for (let i = 0; i < columns; i++) {
-        const item = tile.clone();
-        item.position.x = bbox.max.x * 2 * (3 / 4) * i;
-        item.position.y = bbox.max.y * 2 * j + bbox.max.y * (i & 1);
+        // skip last item in even rows
+        if ((j & 1) === 1 && i + 1 === columns) {
+          break;
+        }
+
+        const item = modifiedTile.clone();
+        item.rotation.z = Math.PI / 2;
+        // item.position.x = bbox.max.x * 2 * (3 / 4) * i;
+        // item.position.y = bbox.max.y * 2 * j + bbox.max.y * (i & 1);
+        item.position.x = bbox.max.x * 2 * i + bbox.max.x * (j & 1);
+        item.position.y = bbox.max.y * 2 * (3 / 4) * j;
 
         this.add(item);
       }

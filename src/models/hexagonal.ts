@@ -31,7 +31,7 @@ export class HexagonalFlatWireframe extends LineSegments {
   constructor() {
     super(
       new EdgesGeometry(new HexagonalFlat().geometry, 2),
-      new LineBasicMaterial({ color: 'cadetblue' }),
+      new LineBasicMaterial({ color: 'red' }),
     );
   }
 }
