@@ -1,7 +1,8 @@
 import { Meta, Story } from '@storybook/html';
-import { Box3, LineBasicMaterial, Mesh, MeshBasicMaterial, PlaneGeometry, Texture, TextureLoader } from 'three';
+import { Box3, Color, Group, LineBasicMaterial, Mesh, MeshBasicMaterial, PlaneGeometry, Texture, TextureLoader } from 'three';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
 import { RaycasterController } from '../controllers/raycaster';
-import { HexagonalFlat, HexagonalFlatWireframe } from '../models/hexagonal';
+import { HexagonalFlat, HexagonalFlatWireframe, HexagonalFlatWireframe2 } from '../models/hexagonal';
 import { HexagridFlat } from '../models/hexagrid';
 import { useScene } from './utils/scene';
 
@@ -22,9 +23,12 @@ const meta: Meta<Args> = {
 
 const Template: Story<Args> = (args) => {
   const { scene, camera, canvas } = useScene(document.querySelector('#root') as HTMLElement);
-  camera.position.z = 55;
+  camera.position.y = 15;
+  camera.position.z = 40;
 
   const grid = new HexagridFlat(args.columns, args.rows, new HexagonalFlatWireframe());
+  grid.children.forEach(it => (it.material as LineMaterial).setValues({ transparent: true, opacity: 0 }));
+  grid.position.z = 0.002;
   const gridInvisible = new HexagridFlat(args.columns, args.rows, new HexagonalFlat());
   gridInvisible.visible = false;
   const bbox = new Box3().setFromObject(grid);
@@ -37,14 +41,19 @@ const Template: Story<Args> = (args) => {
   const raycaster = new RaycasterController();
   
   canvas.addEventListener('click', (event) => {
-    grid.children.map(it => (it.material as LineBasicMaterial).setValues({ color: 'cadetblue' }));
+    grid.children.forEach(it => (it.material as LineMaterial).setValues({ opacity: 0 }));
+
     const [{ object }] = raycaster.intersects(gridInvisible.children, camera, event, canvas);
     const indexOfObject = gridInvisible.children.indexOf(object as Mesh);
-    grid.children[indexOfObject].material = new LineBasicMaterial({ color: 'red' });
+    grid.children[indexOfObject].material = (grid.children[indexOfObject].material as LineMaterial).clone();
+    (grid.children[indexOfObject].material as LineMaterial).setValues({ opacity: 1 });
   });
 
-  grid.position.z += 0.001;
-  scene.add(grid, gridInvisible, plane);
+  const group = new Group();
+  group.add(grid, gridInvisible, plane);
+  group.rotation.x = -Math.PI / 2;
+
+  scene.add(group);
 
   return canvas;
 };

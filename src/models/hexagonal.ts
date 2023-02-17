@@ -1,4 +1,7 @@
-import { CircleGeometry, CylinderGeometry, EdgesGeometry, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial } from 'three';
+import { CircleGeometry, Color, CylinderGeometry, EdgesGeometry, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial } from 'three';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2';
+import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry';
 
 export class Hexagonal extends Mesh {
   constructor() {
@@ -32,6 +35,15 @@ export class HexagonalFlatWireframe extends LineSegments {
     super(
       new EdgesGeometry(new HexagonalFlat().geometry, 2),
       new LineBasicMaterial({ color: 'red' }),
+    );
+  }
+}
+
+export class HexagonalFlatWireframe2 extends LineSegments2 {
+  constructor() {
+    super(
+      new LineSegmentsGeometry().fromEdgesGeometry(new EdgesGeometry(new HexagonalFlat().geometry, 2)),
+      new LineMaterial({ color: new Color('red').getHex(), linewidth: 0.001 }),
     );
   }
 }
