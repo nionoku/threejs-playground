@@ -22,7 +22,7 @@ const meta: Meta<Args> = {
 };
 
 const Template: Story<Args> = (args) => {
-  const { scene, camera, canvas } = useScene(document.querySelector('#root') as HTMLElement);
+  const { scene, camera, canvas, controls } = useScene(document.querySelector('#root') as HTMLElement);
   camera.position.y = 15;
   camera.position.z = 40;
 
@@ -39,6 +39,18 @@ const Template: Story<Args> = (args) => {
     new MeshBasicMaterial({ map: planeTexture }),
   );
   const raycaster = new RaycasterController();
+
+  canvas.addEventListener('mousedown', (event) => {
+    const hasTarget = raycaster.intersects(gridInvisible.children, camera, event, canvas).length > 0;
+
+    if (hasTarget) {
+      controls.enabled = false;
+    }
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    controls.enabled = true;
+  });
   
   canvas.addEventListener('click', (event) => {
     grid.children.forEach(it => (it.material as LineMaterial).setValues({ opacity: 0 }));
