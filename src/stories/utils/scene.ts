@@ -1,5 +1,5 @@
 import { update } from '@tweenjs/tween.js';
-import { Color, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { Color, PerspectiveCamera, Scene, sRGBEncoding, WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
@@ -8,7 +8,8 @@ export function useScene(root: HTMLElement): {
   canvas: HTMLCanvasElement,
   scene: Scene,
   camera: PerspectiveCamera,
-  controls: OrbitControls
+  controls: OrbitControls,
+  renderer: WebGLRenderer
 } {
   const renderer = new WebGLRenderer({
     antialias: true,
@@ -16,6 +17,7 @@ export function useScene(root: HTMLElement): {
   
   renderer.setSize(root.clientWidth, root.clientHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.outputEncoding = sRGBEncoding;
 
   const scene = new Scene();
   const camera = new PerspectiveCamera(20, renderer.domElement.width / renderer.domElement.height, 0.1, 1000);
@@ -46,5 +48,6 @@ export function useScene(root: HTMLElement): {
     camera,
     scene,
     controls,
+    renderer,
   };
 }
