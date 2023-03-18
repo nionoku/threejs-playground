@@ -20,7 +20,7 @@ export function useScene(root: HTMLElement): {
   renderer.outputEncoding = sRGBEncoding;
 
   const scene = new Scene();
-  const camera = new PerspectiveCamera(20, renderer.domElement.width / renderer.domElement.height, 0.1, 1000);
+  const camera = new PerspectiveCamera(50, renderer.domElement.width / renderer.domElement.height, 0.1, 1000);
   const controls = new OrbitControls(camera, renderer.domElement);
   const composer = new EffectComposer(renderer);
   const renderPass = new RenderPass(scene, camera);
