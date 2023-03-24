@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/html';
 import { useScene } from './utils/scene';
-import { AmbientLight, BoxGeometry, CineonToneMapping, CircleGeometry, Color, DirectionalLight, Mesh, MeshStandardMaterial, MeshToonMaterial, PCFSoftShadowMap, ShaderMaterial, SphereGeometry, sRGBEncoding, TorusKnotGeometry, UniformsLib } from 'three';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
+import { AmbientLight, BoxGeometry, BufferGeometry, CineonToneMapping, CircleGeometry, Color, DirectionalLight, Mesh, MeshStandardMaterial, MeshToonMaterial, PCFSoftShadowMap, ShaderMaterial, SphereGeometry, sRGBEncoding, TorusKnotGeometry, UniformsLib } from 'three';
 
 type Args = unknown;
 
@@ -26,8 +27,6 @@ const Template: Story<Args> = (args) => {
   renderer.physicallyCorrectLights = true;
 
   camera.position.z = 7;
-
-  const geometry = new TorusKnotGeometry();
   const material = new ShaderMaterial({
     vertexShader: `
       varying vec3 vNormal;
@@ -56,20 +55,20 @@ const Template: Story<Args> = (args) => {
 
       void main() {
         float NdotL = dot(vNormal, directionalLights[0].direction);
-        float lightIntensity = smoothstep(0.0, 0.01, NdotL);
+        float lightIntensity = smoothstep(0.0, 0.05, NdotL);
         vec3 directionalLight = directionalLights[0].color * lightIntensity;
 
         vec3 halfLight = normalize(directionalLights[0].direction + vViewDir);
         float NdotH = dot(vNormal, halfLight);
         float specularIntensity = pow(NdotH * lightIntensity, 1000.0 / uGlossiness);
-        float specularIntensitySmooth = smoothstep(0.05, 0.1, specularIntensity);
+        float specularIntensitySmooth = smoothstep(0.01, 0.1, specularIntensity);
 
         vec3 specular = specularIntensitySmooth * directionalLights[0].color;
 
         float rimDot = 1.0 - dot(vViewDir, vNormal);
-        float rimAmount = 0.8;
+        float rimAmount = 0.6;
 
-        float rimThreshold = 0.5;
+        float rimThreshold = 0.2;
         float rimIntensity = rimDot * pow(NdotL, rimThreshold);
         rimIntensity = smoothstep(rimAmount - 0.01, rimAmount + 0.01, rimIntensity);
 
@@ -84,14 +83,21 @@ const Template: Story<Args> = (args) => {
         value: new Color('#6495ED'),
       },
       uGlossiness: {
-        value: 4,
+        value: 9,
       },
     },
     lights: true,
   });
-  const mesh = new Mesh(geometry, material);
+  const mesh = new Mesh();
+  mesh.scale.set(0.05, 0.05, 0.05);
+  mesh.rotation.set(Math.PI / -2, 0, 0);
+
+  new STLLoader().load('robot.stl', (geom) => {
+    mesh.geometry = geom;
+    mesh.material = material;
+  });
   
-  const directionalLight = new DirectionalLight(new Color('#f8f1e6'), 0.5);
+  const directionalLight = new DirectionalLight(new Color('#fff'), 0.5);
   directionalLight.position.set(5, 4, 0);
   const ambientLight = new AmbientLight('#ffffff', 1);
 
